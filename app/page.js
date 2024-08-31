@@ -7,7 +7,7 @@ const defaultOrder = {
   street_number: '',
   street: '',
   city: '',
-  order_type: '',
+  order_type: 'Credit',
   tip: 0,
 }
 
@@ -18,7 +18,14 @@ export default function Home() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log(order);
+    const resp = await fetch('/api/manageOrders', {
+      method: 'POST',
+      body: JSON.stringify(order)
+    })
+
+    if(resp.ok){
+      setOrder(defaultOrder);
+    }
   }
   
   const handleChange = (e) => {
@@ -57,6 +64,7 @@ export default function Home() {
         <div className='flex flex-col'>
           <span className='text-sm'>Order Total</span>
           <input
+            value={order.total}
             name='total'
             type='text'
             inputMode='decimal'
@@ -68,6 +76,7 @@ export default function Home() {
         <div className='flex flex-col'>
           <span className='text-sm'>Street Number</span>
           <input
+            value={order.street_number}
             inputMode='numeric'
             name='street_number'
             type='text'
@@ -79,6 +88,7 @@ export default function Home() {
         <div className='flex flex-col'>
           <span className='text-sm'>Street</span>
           <input
+            value={order.street}
             name='street'
             type='text'
             onChange={handleChange}
@@ -89,6 +99,7 @@ export default function Home() {
         <div className='flex flex-col'>
           <span className='text-sm'>City</span>
           <input
+            value={order.city}
             name='city'
             type='text'
             onChange={handleChange}
@@ -99,6 +110,7 @@ export default function Home() {
         <div className='flex flex-col items-start'>
           <span className='text-sm'>Cash Order?</span>
           <input
+            checked={order.order_type === 'Cash' ? true : false}
             name='order_type'
             type='checkbox'
             onChange={handleChange}
@@ -109,6 +121,7 @@ export default function Home() {
         <div className='flex flex-col'>
           <span className='text-sm'>Tip</span>
           <input
+            value={order.tip}
             name='tip'
             type='text'
             inputMode='decimal'
