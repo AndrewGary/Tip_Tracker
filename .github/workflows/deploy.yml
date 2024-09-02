@@ -1,0 +1,29 @@
+name: Deploy to Ubuntu Server
+
+on:
+  push:
+    branches:
+      - main  # Deploys when you push to the main branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.8.1
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Deploy to server
+        run: |
+          ssh -o StrictHostKeyChecking=no andrew@73.36.4.163 << 'EOF'
+            cd /srv/samba/share/tip_tracker
+            git pull origin main
+            # If you are running a Node.js app, you might want to include:
+            npm install
+            pm2 restart your-app-name  # Or any command to restart your app
+          EOF
