@@ -20,6 +20,7 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           source: "."
           target: "/src/samba/share/tip_tracker"
+          debug: true
 
       - name: Execute deployment script
         uses: appleboy/ssh-action@master
