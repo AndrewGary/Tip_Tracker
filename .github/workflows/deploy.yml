@@ -25,5 +25,5 @@ jobs:
             git pull origin main
             # If you are running a Node.js app, you might want to include:
             npm install
-            pm2 restart your-app-name  # Or any command to restart your app
+            pm2 restart tip_tracker  # Or any command to restart your app
           EOF
