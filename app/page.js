@@ -18,7 +18,7 @@ export default function Home() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const resp = await fetch('/api/manageOrders', {
+    const resp = await fetch('/api/insertOrder', {
       method: 'POST',
       body: JSON.stringify(order)
     })
@@ -46,7 +46,7 @@ export default function Home() {
 
   return (
     <div className="w-full min-h-full flex flex-col justify-center items-center">
-      <h1>Add New Orderssss</h1>
+      <h1>Add New</h1>
 
       <form className='flex flex-col border border-black rounded-md w-11/12 px-3'>
         
