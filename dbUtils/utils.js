@@ -62,7 +62,6 @@ const getTodaysOrders = async () => {
     
     const today = new Date().toISOString().split('T')[0];
 
-
     const resp = await connection.query(`select * from orders where order_date = '${today}'`);
 
     console.log('resp: ', resp);
@@ -75,9 +74,28 @@ const getTodaysOrders = async () => {
   }
 }
 
+const getTodaysTotal = async () => {
+
+  let connection;
+
+  try{
+    connection = await getConnection();
+
+    const today = new Date().toISOString().split('T')[0];
+
+    const resp = await connection.query(`select sum(tip) as total from orders where order_date = '${today}'`);
+
+    return resp[0].total;
+  }catch(error){
+    console.log(error)
+  }finally{
+    if(connection) await connection.end()
+  }
+}
 module.exports = {
   getConnection,
-  getTodaysOrders
+  getTodaysOrders,
+  getTodaysTotal
 }
 // const Database = require('better-sqlite3');
 // const path = require('path');

@@ -1,5 +1,5 @@
 "use client"
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 const defaultOrder = {
   name: '',
@@ -14,6 +14,21 @@ const defaultOrder = {
 export default function Home() {
 
   const [order, setOrder] = useState(defaultOrder)
+  const [todaysTotal, setTodaysTotal] = useState('');
+
+  useEffect(() => {
+    const useEffectAsync = async () => {
+      const resp = await fetch('/api/getTodaysTotal');
+
+      const parsedResp = await resp.json();
+
+      console.log(parsedResp);
+
+      setTodaysTotal(parsedResp.total)
+    }
+
+    useEffectAsync();
+  }, [])
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -46,6 +61,10 @@ export default function Home() {
 
   return (
     <div className="w-full min-h-full flex flex-col justify-center items-center">
+
+      <div>
+        <span className='font-bold'>Todays Total: $</span>{todaysTotal ? `${todaysTotal}` : '0.00'}
+      </div>
       <h1>Add New</h1>
 
       <form className='flex flex-col border border-black rounded-md w-11/12 px-3'>
