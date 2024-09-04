@@ -24,8 +24,9 @@ jobs:
             cd /srv/samba/share/tip_tracker
             git pull origin main
             # If you are running a Node.js app, you might want to include:
+            pm2 stop tip_tracker
             npm install
             npm run build
             npm run start
-            pm2 restart tip_tracker  # Or any command to restart your app
+            pm2 start tip_tracker  # Or any command to restart your app
           EOF
