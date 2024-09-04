@@ -15,6 +15,7 @@ export default function Home() {
 
   const [order, setOrder] = useState(defaultOrder)
   const [todaysTotal, setTodaysTotal] = useState('');
+  const [respStatus, setRespStatus] = useState(null);
 
   useEffect(() => {
     const useEffectAsync = async () => {
@@ -38,6 +39,7 @@ export default function Home() {
       body: JSON.stringify(order)
     })
 
+    setRespStatus(resp.status);
     if(resp.ok){
       setOrder(defaultOrder);
     }
@@ -155,6 +157,8 @@ export default function Home() {
           </button>
 
         </div>
+
+        <span>{respStatus && `${respStatus}`}</span>
       </form>
     </div>
   );
