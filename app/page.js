@@ -41,6 +41,9 @@ export default function Home() {
 
     setRespStatus(resp.status);
     if(resp.ok){
+      const getNewTotal = await fetch('/api/getTodaysTotal');
+      const parsedResp = await getNewTotal.json();
+      setTodaysTotal(parsedResp.total);
       setOrder(defaultOrder);
     }
   }
