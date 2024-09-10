@@ -7,9 +7,10 @@ const page = () => {
     const [total, setTotal] = useState(0);
 
     const buttonClick = async (e) => {
-        e.preventDefault();
-
-        setTotal(total + 10);
+        const resp = await fetch('/api/testing');
+        console.log(resp);
+        const parsedResp = await resp.json();
+        console.log(parsedResp);
     }
 
 
