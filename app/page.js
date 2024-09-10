@@ -65,103 +65,102 @@ export default function Home() {
   }
 
   return (
-    <div className="w-full min-h-full flex flex-col justify-center items-center">
-
-      <div>
-        <span className='font-bold'>Todays Total: $</span>{todaysTotal ? `${todaysTotal}` : '0.00'}
+    <div className="w-full min-h-screen flex flex-col justify-center items-center bg-gray-50 p-6">
+      <div className="text-2xl font-bold mb-4">
+        <span className='text-gray-800'>Today's Total: $</span>{todaysTotal ? `${todaysTotal}` : '0.00'}
       </div>
-      <h1>Add New</h1>
 
-      <form className='flex flex-col border border-black rounded-md w-11/12 px-3'>
+      <h1 className="text-xl font-semibold mb-4 text-gray-900">Add New Order</h1>
+
+      <form className='flex flex-col border border-gray-300 rounded-lg w-full md:w-1/2 lg:w-1/3 bg-white p-6 shadow-md'>
         
-        <div className='flex flex-col'>
-          <span className='text-sm'>Name</span>
+        <div className='flex flex-col mb-4'>
+          <label className='text-sm font-medium text-gray-700'>Name</label>
           <input
             value={order.name}
             name='name'
             type='text'
             onChange={handleChange}
-            className='border border-black rounded-sm pl-1'
+            className='border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500'
           />
         </div>
 
-        <div className='flex flex-col'>
-          <span className='text-sm'>Order Total</span>
+        <div className='flex flex-col mb-4'>
+          <label className='text-sm font-medium text-gray-700'>Order Total</label>
           <input
             value={order.total}
             name='total'
             type='text'
             inputMode='decimal'
             onChange={handleChange}
-            className='border border-black rounded-sm pl-1'
+            className='border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500'
           />
         </div>
 
-        <div className='flex flex-col'>
-          <span className='text-sm'>Street Number</span>
+        <div className='flex flex-col mb-4'>
+          <label className='text-sm font-medium text-gray-700'>Street Number</label>
           <input
             value={order.street_number}
             inputMode='numeric'
             name='street_number'
             type='text'
             onChange={handleChange}
-            className='border border-black rounded-sm pl-1'
+            className='border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500'
           />
         </div>
 
-        <div className='flex flex-col'>
-          <span className='text-sm'>Street</span>
+        <div className='flex flex-col mb-4'>
+          <label className='text-sm font-medium text-gray-700'>Street</label>
           <input
             value={order.street}
             name='street'
             type='text'
             onChange={handleChange}
-            className='border border-black rounded-sm pl-1'
+            className='border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500'
           />
         </div>
 
-        <div className='flex flex-col'>
-          <span className='text-sm'>City</span>
+        <div className='flex flex-col mb-4'>
+          <label className='text-sm font-medium text-gray-700'>City</label>
           <input
             value={order.city}
             name='city'
             type='text'
             onChange={handleChange}
-            className='border border-black rounded-sm pl-1'
+            className='border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500'
           />
         </div>
 
-        <div className='flex flex-col items-start'>
-          <span className='text-sm'>Cash Order?</span>
+        <div className='flex items-center mb-4'>
+          <label className='text-sm font-medium text-gray-700 mr-2'>Cash Order?</label>
           <input
-            checked={order.order_type === 'Cash' ? true : false}
+            checked={order.order_type === 'Cash'}
             name='order_type'
             type='checkbox'
             onChange={handleChange}
-            className='border border-black rounded-sm pl-1'
+            className='border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500'
           />
         </div>
 
-        <div className='flex flex-col'>
-          <span className='text-sm'>Tip</span>
+        <div className='flex flex-col mb-4'>
+          <label className='text-sm font-medium text-gray-700'>Tip</label>
           <input
             value={order.tip}
             name='tip'
             type='text'
             inputMode='decimal'
             onChange={handleChange}
-            className='border border-black rounded-sm pl-1'
+            className='border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500'
           />
         </div>
 
-        <div className='w-full flex justify-center mt-4'>
-          <button className='border border-black rounded-md w-4/5' onClick={handleSubmit}>
+        <div className='w-full flex justify-center'>
+          <button className='border border-gray-300 bg-blue-500 text-white rounded-md w-full py-2 hover:bg-blue-600 transition-all' onClick={handleSubmit}>
             Add Order
           </button>
-
         </div>
 
-        <span>{respStatus && `${respStatus}`}</span>
+        <span className='text-red-500 text-center mt-4'>{respStatus && `${respStatus}`}</span>
       </form>
     </div>
   );
