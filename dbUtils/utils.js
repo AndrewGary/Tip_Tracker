@@ -18,7 +18,7 @@ const getDatabaseHost = () => {
   }
 
   // If not in LAN, use the public IP
-  return process.env.DB_HOST_PUBLIC;
+  return 'localhost';
 }
 
 const getConnection = async (maxRetries = 3) => {
