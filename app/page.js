@@ -17,8 +17,7 @@ export default function Home() {
   const [todaysTotal, setTodaysTotal] = useState('');
   const [ordersTotal, setOrdersTotal] = useState('');
   const [numberOfOrders, setNumberOfOrders] = useState('');
-
-
+  
   useEffect(() => {
     const useEffectAsync = async () => {
 
@@ -26,9 +25,9 @@ export default function Home() {
 
       const parsedSummary = await todaysSummaryResp.json();
 
-      setTodaysTotal(parsedSummary.totalTips)
+      setTodaysTotal(parsedSummary.totalTips.toFixed(2))
       setNumberOfOrders(parsedSummary.totalOrders);
-      setOrdersTotal(parsedSummary.allOrdersTotal);
+      setOrdersTotal(parsedSummary.allOrdersTotal.toFixed(2));
 
       console.log(parsedSummary);
     }
@@ -44,11 +43,16 @@ export default function Home() {
       body: JSON.stringify(order)
     })
 
-    setRespStatus(resp.status);
     if(resp.ok){
-      const getNewTotal = await fetch('/api/getTodaysTotal');
-      const parsedResp = await getNewTotal.json();
-      setTodaysTotal(parsedResp.total);
+      const resp = await fetch('/api/getTodaysSummary');
+      const parsedResp = await resp.json();
+      setTodaysTotal(parsedResp.totalTips)
+      setNumberOfOrders(parsedResp.totalOrders);
+      setOrdersTotal(parsedResp.allOrdersTotal);
+
+      console.log('typeof parsedResp.totalTips: ', typeof parsedResp.totalTips);
+      console.log('typeof parsedResp.allOrdersTotal: ', typeof parsedResp.allOrdersTotal)
+      
       setOrder(defaultOrder);
     }
   }
@@ -71,7 +75,7 @@ export default function Home() {
 
   return (
     <div className="w-full min-h-screen flex flex-col justify-center items-center bg-gray-50 p-6">
-      <div className="text-xl font-bold mb-4 flex flex-col w-full">
+      <div className="text-xl font-bold mb-4 flex flex-col w-full border border-gray-300 rounded-md px-4 py-2 shadow-md">
         <div className='w-full flex justify-between'>
           <span className='text-gray-800'>Tips:</span>{todaysTotal ? `$${todaysTotal}` : '$0.00'}
         </div>
