@@ -15,17 +15,22 @@ export default function Home() {
 
   const [order, setOrder] = useState(defaultOrder)
   const [todaysTotal, setTodaysTotal] = useState('');
-  const [respStatus, setRespStatus] = useState(null);
+  const [ordersTotal, setOrdersTotal] = useState('');
+  const [numberOfOrders, setNumberOfOrders] = useState('');
+
 
   useEffect(() => {
     const useEffectAsync = async () => {
-      const resp = await fetch('/api/getTodaysTotal');
 
-      const parsedResp = await resp.json();
+      const todaysSummaryResp = await fetch('/api/getTodaysSummary');
 
-      console.log(parsedResp);
+      const parsedSummary = await todaysSummaryResp.json();
 
-      setTodaysTotal(parsedResp.total)
+      setTodaysTotal(parsedSummary.totalTips)
+      setNumberOfOrders(parsedSummary.totalOrders);
+      setOrdersTotal(parsedSummary.allOrdersTotal);
+
+      console.log(parsedSummary);
     }
 
     useEffectAsync();
@@ -66,8 +71,16 @@ export default function Home() {
 
   return (
     <div className="w-full min-h-screen flex flex-col justify-center items-center bg-gray-50 p-6">
-      <div className="text-2xl font-bold mb-4">
-        <span className='text-gray-800'>Today's Total: $</span>{todaysTotal ? `${todaysTotal}` : '0.00'}
+      <div className="text-xl font-bold mb-4 flex flex-col w-full">
+        <div className='w-full flex justify-between'>
+          <span className='text-gray-800'>Tips:</span>{todaysTotal ? `$${todaysTotal}` : '$0.00'}
+        </div>
+        <div className='w-full flex justify-between'>
+          <span className='text-gray-800'># of Orders:</span>{numberOfOrders ? `${numberOfOrders}` : '0'}
+        </div>
+        <div className='w-full flex justify-between'>
+          <span className='text-gray-800'>Order Total:</span>{ordersTotal ? `$${ordersTotal}` : '$0.00'}
+        </div>
       </div>
 
       <h1 className="text-xl font-semibold mb-4 text-gray-900">Add New Order</h1>
@@ -155,12 +168,11 @@ export default function Home() {
         </div>
 
         <div className='w-full flex justify-center'>
-          <button className='border border-gray-300 bg-blue-500 text-white rounded-md w-full py-2 hover:bg-blue-600 transition-all' onClick={handleSubmit}>
+          <button className='border border-gray-300 bg-red-500 text-white rounded-md w-full py-2 hover:bg-blue-600 transition-all' onClick={handleSubmit}>
             Add Order
           </button>
         </div>
 
-        <span className='text-red-500 text-center mt-4'>{respStatus && `${respStatus}`}</span>
       </form>
     </div>
   );

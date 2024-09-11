@@ -29,7 +29,7 @@ const getConnection = async (maxRetries = 3) => {
   while (attempts < maxRetries) {
     try {
       const conn = await mariadb.createConnection({
-        host: 'localhost',
+        host: process.env.NODE_ENV === 'production' ? 'localhost' : '10.99.0.37',
         user: process.env.DB_USER,
         password: process.env.DB_PASSWORD,
         database: process.env.DB_NAME,
@@ -85,6 +85,7 @@ const getTodaysTotal = async () => {
 
     const resp = await connection.query(`select sum(tip) as total from orders where order_date = '${today}'`);
 
+    console.log('resp: ', resp)
     return resp[0].total;
   }catch(error){
     console.log(error)

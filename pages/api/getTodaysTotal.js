@@ -1,28 +1,25 @@
-const {getTodaysTotal, getConnection} = require("../../dbUtils/utils")
+const { getConnection} = require("../../dbUtils/utils")
 
 export default async function handler (req, res){
-
 
     let connection;
 
     try{
         connection = await getConnection();
+        const query = await connection.query(`select sum(tip) as total from orders where order_date = '2024-09-10'`);
+        // console.log(Object.keys(query[0]));
+        console.log(query);
 
-        // const resp = await connection.query(`insert into orders (name, total, street_number, street, city, tip_type, tip) values (?, ?, ?, ?, ?, ?,?)`, [order.name, parseFloat(order.total), order.street_number, order.street, order.city, order.order_type, parseFloat(order.tip)]);
-        const resp = await getTodaysTotal();
+        if(!query[0].total){
+            return res.status(200).json({ total: '0'})
+        }
 
-        // console.log(resp);
+        return res.status(200).json({ total: query[0].total});
 
-        return res.status(200).json({ total: resp});
     }catch(error){
         console.log(error);
         return res.status(500).json({ message: 'Error Adding Order Info'});
     }finally{
         if(connection) await connection.end()
     }
-    // console.log(order);
-
-    // return res.status(200).json({ message: 'Success' });
-
-    // let
 }
