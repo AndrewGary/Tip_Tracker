@@ -70,7 +70,6 @@ export default function Home() {
       setNumberOfOrders(parsedSummary.totalOrders);
       setOrdersTotal(parsedSummary.allOrdersTotal.toFixed(2));
 
-      console.log(parsedSummary);
     }
 
     useEffectAsync();
@@ -91,9 +90,6 @@ export default function Home() {
       setNumberOfOrders(parsedResp.totalOrders);
       setOrdersTotal(parsedResp.allOrdersTotal);
 
-      console.log('typeof parsedResp.totalTips: ', typeof parsedResp.totalTips);
-      console.log('typeof parsedResp.allOrdersTotal: ', typeof parsedResp.allOrdersTotal)
-      
       setOrder(defaultOrder);
     }
   }
@@ -115,10 +111,6 @@ export default function Home() {
   }
 
   const handleAutoCompleteSelection = async (indexOfSelection) => {
-    // e.preventDefault();
-
-    console.log('indexOfSelection: ', indexOfSelection)
-    console.log(suggestions[indexOfSelection]);
 
     setOrder({
       ...order,
