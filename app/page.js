@@ -114,6 +114,22 @@ export default function Home() {
       
   }
 
+  const handleAutoCompleteSelection = async (indexOfSelection) => {
+    // e.preventDefault();
+
+    console.log('indexOfSelection: ', indexOfSelection)
+    console.log(suggestions[indexOfSelection]);
+
+    setOrder({
+      ...order,
+      street_number: suggestions[indexOfSelection].house_number,
+      street: suggestions[indexOfSelection].street,
+      city: suggestions[indexOfSelection].city
+    })
+
+    setSuggestions([]);
+  }
+
   return (
     <div className="w-full min-h-screen flex flex-col justify-center items-center bg-gray-50 p-6">
       <div className="text-xl font-bold mb-4 flex flex-col w-full border border-gray-300 rounded-md px-4 py-2 shadow-md">
@@ -172,7 +188,9 @@ export default function Home() {
           {suggestions.length > 0 && (
             <div className='flex flex-col border border-black'>
               {suggestions.map((item, key) => (
-                <div key={key}>
+                <div key={key} onClick={() => {
+                  handleAutoCompleteSelection(key)
+                }}>
                   {`${item.house_number} ${item.street}, ${item.city}`}
                 </div>
               ))}
