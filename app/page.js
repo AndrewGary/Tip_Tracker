@@ -3,12 +3,12 @@ import { useState, useEffect } from 'react'
 
 const defaultOrder = {
   name: '',
-  total: 0,
+  total: '',
   street_number: '',
   street: '',
   city: '',
   order_type: 'Credit',
-  tip: 0,
+  tip: '',
 }
 
 export default function Home() {
@@ -17,6 +17,47 @@ export default function Home() {
   const [todaysTotal, setTodaysTotal] = useState('');
   const [ordersTotal, setOrdersTotal] = useState('');
   const [numberOfOrders, setNumberOfOrders] = useState('');
+
+  
+
+  const [debouncedTerm, setDebouncedTerm] = useState(order.street_number);
+  const [suggestions, setSuggestions] = useState([]);
+
+  //For detecting debounce
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedTerm(order.street_number);
+    }, 500); // Delay of 500ms (you can adjust this delay)
+
+    return () => {
+      clearTimeout(timer); // Clear the timer if the user starts typing again
+    };
+  }, [order.street_number]);
+
+  // Call the action when the debounced term updates
+  useEffect(() => {
+
+    const debounceAsync = async () => {
+      try{
+
+        const resp = await fetch(`/api/autoSearchAddress?address=${debouncedTerm}`);
+
+        if(!resp.ok){
+          return;
+        }
+
+        const parsedResp = await resp.json();
+
+        setSuggestions(parsedResp);
+      }catch(error){
+        console.log(error)
+      }
+    }
+    if (debouncedTerm) {
+      debounceAsync();
+    }
+  }, [debouncedTerm]);
+
   
   useEffect(() => {
     const useEffectAsync = async () => {
@@ -29,7 +70,6 @@ export default function Home() {
       setNumberOfOrders(parsedSummary.totalOrders);
       setOrdersTotal(parsedSummary.allOrdersTotal.toFixed(2));
 
-      console.log(parsedSummary);
     }
 
     useEffectAsync();
@@ -50,9 +90,6 @@ export default function Home() {
       setNumberOfOrders(parsedResp.totalOrders);
       setOrdersTotal(parsedResp.allOrdersTotal);
 
-      console.log('typeof parsedResp.totalTips: ', typeof parsedResp.totalTips);
-      console.log('typeof parsedResp.allOrdersTotal: ', typeof parsedResp.allOrdersTotal)
-      
       setOrder(defaultOrder);
     }
   }
@@ -71,6 +108,18 @@ export default function Home() {
       })
     }
       
+  }
+
+  const handleAutoCompleteSelection = async (indexOfSelection) => {
+
+    setOrder({
+      ...order,
+      street_number: suggestions[indexOfSelection].house_number,
+      street: suggestions[indexOfSelection].street,
+      city: suggestions[indexOfSelection].city
+    })
+
+    setSuggestions([]);
   }
 
   return (
@@ -115,7 +164,10 @@ export default function Home() {
         </div>
 
         <div className='flex flex-col mb-4'>
-          <label className='text-sm font-medium text-gray-700'>Street Number</label>
+          <label className='text-sm font-medium text-gray-700'>
+            Street Number
+          </label>
+          
           <input
             value={order.street_number}
             inputMode='numeric'
@@ -124,7 +176,20 @@ export default function Home() {
             onChange={handleChange}
             className='border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500'
           />
+          
+          {suggestions.length > 0 && (
+            <div className='flex flex-col border border-black'>
+              {suggestions.map((item, key) => (
+                <div key={key} onClick={() => {
+                  handleAutoCompleteSelection(key)
+                }}>
+                  {`${item.house_number} ${item.street}, ${item.city}`}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
+
 
         <div className='flex flex-col mb-4'>
           <label className='text-sm font-medium text-gray-700'>Street</label>
