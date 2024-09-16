@@ -1,5 +1,6 @@
 "use client"
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 
 const defaultOrder = {
   name: '',
@@ -12,6 +13,7 @@ const defaultOrder = {
 }
 
 export default function Home() {
+  const router = useRouter();
 
   const [order, setOrder] = useState(defaultOrder)
   const [todaysTotal, setTodaysTotal] = useState('');
@@ -124,7 +126,7 @@ export default function Home() {
 
   return (
     <div className="w-full min-h-screen flex flex-col justify-center items-center bg-gray-50 p-6">
-      <div className="text-xl font-bold mb-4 flex flex-col w-full border border-gray-300 rounded-md px-4 py-2 shadow-md">
+      <div onClick={() => router.push('/pastOrders')} className="text-xl font-bold mb-4 flex flex-col w-full border border-gray-300 rounded-md px-4 py-2 shadow-md">
         <div className='w-full flex justify-between'>
           <span className='text-gray-800'>Tips:</span>{todaysTotal ? `$${todaysTotal}` : '$0.00'}
         </div>
