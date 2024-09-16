@@ -27,7 +27,7 @@ export default function Home() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedTerm(order.street_number);
-    }, 500); // Delay of 500ms (you can adjust this delay)
+    }, 300); // Delay of 500ms (you can adjust this delay)
 
     return () => {
       clearTimeout(timer); // Clear the timer if the user starts typing again
@@ -170,7 +170,6 @@ export default function Home() {
           
           <input
             value={order.street_number}
-            inputMode='numeric'
             name='street_number'
             type='text'
             onChange={handleChange}
