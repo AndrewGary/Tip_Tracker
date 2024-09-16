@@ -93,10 +93,32 @@ const getTodaysTotal = async () => {
     if(connection) await connection.end()
   }
 }
+
+const getXDaysOrders = async (date) => {
+  // If there is no date, we want to default to the current date.
+  if(!date){
+    date = new Date().toLocaleDateString('en-CA');
+  }
+
+  let connection;
+
+  try{
+    connection = await getConnection();
+
+    const orders = await connection.query(`select * from orders where order_date = '${date}'`);
+
+    return orders;
+  }catch(error){
+    console.log(error)
+  }finally{
+    if(connection) await connection.end()
+  }
+}
 module.exports = {
   getConnection,
   getTodaysOrders,
-  getTodaysTotal
+  getTodaysTotal,
+  getXDaysOrders
 }
 // const Database = require('better-sqlite3');
 // const path = require('path');
