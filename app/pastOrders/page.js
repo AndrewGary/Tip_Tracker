@@ -1,5 +1,6 @@
 import React from 'react';
 const { getXDaysOrders } = require('../../dbUtils/utils');
+import DatePickerComponent from '../../components/DatePickerComponent'
 
 const Page = async ({ searchParams }) => {
     const date = searchParams.date || '';
@@ -10,6 +11,8 @@ const Page = async ({ searchParams }) => {
             <h1 className="text-3xl font-bold text-center mb-8">
                 Orders for {date || 'Recent Days'}
             </h1>
+
+            <DatePickerComponent />
             {orders.length > 0 ? (
                 <div className="overflow-x-auto">
                     <table className="min-w-full bg-white border border-gray-200 rounded-lg">
