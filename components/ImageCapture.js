@@ -1,16 +1,46 @@
 "use client"
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function CameraComponent() {
   const [image, setImage] = useState(null);
+  const [imageFile, setImageFile] = useState(null);
 
   const handleImageCapture = (event) => {
     const file = event.target.files[0];
     if (file) {
       const imageUrl = URL.createObjectURL(file);
       setImage(imageUrl);
+      setImageFile(file);
     }
   };
+
+  useEffect(() => {
+    const useEffectAsync = async () => {
+
+        if(!imageFile){
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('image', imageFile);
+
+        try{
+            const resp = await fetch('/api/extractDataFromImage', {
+                method: 'POST',
+                body: formData
+            })
+
+            console.log(resp.status);
+        }catch(error){
+            console.log(error)
+        }
+        
+    }
+
+    useEffectAsync();
+
+    // console.log(image);
+  }, [image])
 
   return (
     <div className="camera-container">
