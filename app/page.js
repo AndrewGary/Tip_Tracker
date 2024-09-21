@@ -175,6 +175,7 @@ export default function Home() {
             name='street_number'
             type='text'
             onChange={handleChange}
+            onBlur={() => {setSuggestions([])}}
             className='border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500'
           />
           
