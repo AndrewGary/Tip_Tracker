@@ -1,5 +1,5 @@
 "use client"
-import { useState, useEffect } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 
 const defaultOrder = {
@@ -14,6 +14,8 @@ const defaultOrder = {
 
 export default function Home() {
   const router = useRouter();
+
+  const tipFieldRef = useRef(null);
 
   const [order, setOrder] = useState(defaultOrder)
   const [todaysTotal, setTodaysTotal] = useState('');
@@ -98,7 +100,13 @@ export default function Home() {
   
   const handleChange = (e) => {
 
-    if(e.target.name === 'order_type'){
+    if(e.target.name === 'name'){
+      const newWord = e.target.value.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')
+      setOrder({
+        ...order,
+        name: newWord
+      })
+    }else if(e.target.name === 'order_type'){
       setOrder({
         ...order,
         order_type: e.target.checked ? 'Cash' : 'Credit'
@@ -121,7 +129,9 @@ export default function Home() {
       city: suggestions[indexOfSelection].city
     })
 
+    setDebouncedTerm('');
     setSuggestions([]);
+    tipFieldRef.current?.focus()
   }
 
   return (
@@ -148,6 +158,9 @@ export default function Home() {
             value={order.name}
             name='name'
             type='text'
+            autoComplete='off'
+            spellCheck='off'
+            autoCorrect='off'
             onChange={handleChange}
             className='border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500'
           />
@@ -175,7 +188,6 @@ export default function Home() {
             name='street_number'
             type='text'
             onChange={handleChange}
-            onBlur={() => {setSuggestions([])}}
             className='border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500'
           />
           
@@ -229,6 +241,7 @@ export default function Home() {
         <div className='flex flex-col mb-4'>
           <label className='text-sm font-medium text-gray-700'>Tip</label>
           <input
+            ref={tipFieldRef}
             value={order.tip}
             name='tip'
             type='text'
