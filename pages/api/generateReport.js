@@ -2,19 +2,40 @@ const {getConnection} = require('../../dbUtils/utils')
 
 export default async function handler(req, res){
 
+    //Make sure the request method is POST
     if(req.method !== 'POST'){
         return res.status(400).json({ message: 'Incorrect request method.'})
     }
 
-    const {startDate, endDate} = req.body;
+    let {startDate, endDate} = req.body;
 
+    //Make sure the request body includes a startDate and an endDate variable.
     if(!startDate || !endDate){
         return res.status(400).json({ message: 'You must provide a valid start date and end date'})
     }
 
+    //Validate that both the startDate and endDate is 10 chars long.
     if(startDate.length !== 10 || endDate.length !== 10){
         return res.status(400).json({ message: 'The start date and end date should be in the following format: YYYY-MM-DD'});
     }
+
+    //Check to see if the endDate is in the future, and if it is, set the date to the current date.
+    const today = new Date();
+    const inputEndDate = new Date(endDate);
+
+    if(inputEndDate > today){
+        console.log('The endDate is in the future');
+        console.log(`old endDate: ${endDate}`)
+        endDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`
+    }
+
+    //Check to make sure that the startDate !> endDate
+    const inputStartDate = new Date(startDate);
+    if(inputStartDate > inputEndDate){
+        return res.status(400).json({ message: 'The start date can not be after the end date' })
+    }
+
+    //END of validation section.
 
     let connection;
 
@@ -57,6 +78,8 @@ export default async function handler(req, res){
         const numberOfDaysQuery = await connection.query(`select distinct order_date from orders where order_date >= '${startDate}' and order_date <= '${endDate}'`);
         const numberOfDaysWorked = numberOfDaysQuery.length;
         
+        //Get the total number of deliveries in report
+        const totalNumberOfDeliveries = resp.length;
 
 
         console.log('totalAmount: ', totalAmount);
@@ -65,15 +88,7 @@ export default async function handler(req, res){
         console.log('totalDeliveryFees: ', totalDeliveryFees);
         console.log('totalEarned: ', totalEarned)
         console.log('numberOfDaysWorked: ', numberOfDaysWorked)
-        // console.log('creditCardFees: ', creditCardFees) //float 12.3420000000002
-        // console.log('parseFloat(creditCardFees.toFixed(2)): ', parseFloat(creditCardFees.toFixed(2)));
-
-        // const totalNumberOfOrders = resp.length;
-
-        // console.log('totalNumberOfOrders; ', totalNumberOfOrders);
-
-
-
+        console.log('totalNumberOfDeliveries: ', totalNumberOfDeliveries);
 
         return res.status(200).json({ message: 'Temp' })
     }catch(error){
