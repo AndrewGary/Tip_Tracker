@@ -7,7 +7,7 @@ export default async function handler(req, res){
         return res.status(400).json({ message: 'Incorrect request method.'})
     }
 
-    let {startDate, endDate} = req.body;
+    let {startDate, endDate, options} = req.body;
 
     //Make sure the request body includes a startDate and an endDate variable.
     if(!startDate || !endDate){
@@ -86,11 +86,37 @@ export default async function handler(req, res){
         console.log('totalTips: ', totalTips);
         console.log('creditCardFees: ', creditCardFees);
         console.log('totalDeliveryFees: ', totalDeliveryFees);
-        console.log('totalEarned: ', totalEarned)
-        console.log('numberOfDaysWorked: ', numberOfDaysWorked)
+        console.log('totalEarned: ', totalEarned);
+        console.log('numberOfDaysWorked: ', numberOfDaysWorked);
         console.log('totalNumberOfDeliveries: ', totalNumberOfDeliveries);
 
-        return res.status(200).json({ message: 'Temp' })
+
+        //Check to see if the user sent some options over in the request to the endpoint and send the response accordingly.
+        if(options){
+            const returnObject = {
+
+            }
+
+            if(options.includes('totalAmount')) returnObject.totalAmount = totalAmount;
+            if(options.includes('totalTips')) returnObject.totalTips = totalTips;
+            if(options.includes('creditCardFees')) returnObject.creditCardFees = creditCardFees;
+            if(options.includes('totalDeliveryFees')) returnObject.totalDeliveryFees = totalDeliveryFees
+            if(options.includes('totalEarned')) returnObject.totalEarned = totalEarned
+            if(options.includes('numberOfDaysWorked')) returnObject.numberOfDaysWorked = numberOfDaysWorked
+            if(options.includes('totalNumberOfDeliveries')) returnObject.totalNumberOfDeliveries = totalNumberOfDeliveries
+
+            return res.status(200).json(returnObject);
+        }else{
+            return res.status(200).json({
+                totalAmount,
+                totalTips,
+                creditCardFees,
+                totalDeliveryFees,
+                totalEarned,
+                numberOfDaysWorked,
+                totalNumberOfDeliveries
+            })
+        }
     }catch(error){
         return res.status(500).json({ message: 'Server Error' })
     }finally{
