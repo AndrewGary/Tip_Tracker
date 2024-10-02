@@ -21,6 +21,7 @@ export default function Home() {
   const [todaysTotal, setTodaysTotal] = useState('');
   const [ordersTotal, setOrdersTotal] = useState('');
   const [numberOfOrders, setNumberOfOrders] = useState('');
+  const [totalEarned, setTotalEarned] = useState('');
 
   
 
@@ -53,6 +54,9 @@ export default function Home() {
         const parsedResp = await resp.json();
 
         setSuggestions(parsedResp);
+
+        
+
       }catch(error){
         console.log(error)
       }
@@ -70,9 +74,35 @@ export default function Home() {
 
       const parsedSummary = await todaysSummaryResp.json();
 
+
+        const date = new Date().toISOString().split('T')[0];
+
+
+        const resp2 = await fetch(`/api/generateReport`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            startDate: date,
+            endDate: date,
+            options: ['totalEarned']
+          })
+        })
+
+        if(!resp2.ok){
+          console.log(resp2);
+          return;
+        }
+
+        const parsedResp2 = await resp2.json();
+
+        
+
       setTodaysTotal(parsedSummary.totalTips.toFixed(2))
       setNumberOfOrders(parsedSummary.totalOrders);
       setOrdersTotal(parsedSummary.allOrdersTotal.toFixed(2));
+      setTotalEarned(parsedResp2.totalEarned.toFixed(0));
 
     }
 
@@ -87,13 +117,33 @@ export default function Home() {
       body: JSON.stringify(order)
     })
 
+
+    const resp2 = await fetch(`/api/generateReport`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        startDate: date,
+        endDate: date,
+        options: ['totalEarned']
+      })
+    })
+
+    if(!resp2.ok){
+      console.log(resp2);
+      return;
+    }
+
+    const parsedResp2 = await resp2.json();
+
     if(resp.ok){
       const resp = await fetch('/api/getTodaysSummary');
       const parsedResp = await resp.json();
       setTodaysTotal(parsedResp.totalTips)
       setNumberOfOrders(parsedResp.totalOrders);
       setOrdersTotal(parsedResp.allOrdersTotal);
-
+      setTotalEarned(parsedResp2.totalEarned.toFixed(0))
       setOrder(defaultOrder);
     }
   }
@@ -145,6 +195,9 @@ export default function Home() {
         </div>
         <div className='w-full flex justify-between'>
           <span className='text-gray-800'>Order Total:</span>{ordersTotal ? `$${ordersTotal}` : '$0.00'}
+        </div>
+        <div className='w-full flex justify-between'>
+          <span className='text-gray-800'>Total Earned:</span>{totalEarned ? `$${totalEarned}` : '$0.00'}
         </div>
       </div>
 
