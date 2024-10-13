@@ -74,9 +74,7 @@ export default function Home() {
 
       const parsedSummary = await todaysSummaryResp.json();
 
-
-        const date = new Date().toISOString().split('T')[0];
-
+        const date = new Date().toLocaleDateString('en-CA');
 
         const resp2 = await fetch(`/api/generateReport`, {
           method: 'POST',
@@ -117,6 +115,7 @@ export default function Home() {
       body: JSON.stringify(order)
     })
 
+    const date = new Date().toLocaleDateString('en-CA');
 
     const resp2 = await fetch(`/api/generateReport`, {
       method: 'POST',
